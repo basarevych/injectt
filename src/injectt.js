@@ -67,12 +67,13 @@ class Injectt {
   get(name, ...extra) {
     if (!name) throw new Error("Injectt: No service name provided");
 
-    this._debug(`Retrieving service '${name}'`);
-    if (_.isString(name)) return this._resolveService(name, extra, new Map());
+    if (this._debug) this._debug(`Retrieving service '${name}'`);
+    if (typeof name === "string")
+      return this._resolveService(name, extra, new Map());
 
     let result = new Map();
     let request = new Map();
-    _.forEach(this.search(name), item =>
+    this.search(name).forEach(item =>
       result.set(item, this._resolveService(item, extra, request))
     );
     return result;
@@ -84,7 +85,7 @@ class Injectt {
    * @return {string[]}                   Returns array of matching service names
    */
   search(re) {
-    this._debug(`Searching for services ${re}`);
+    if (this._debug) this._debug(`Searching for services ${re}`);
     let result = [];
     for (let name of this.container.keys())
       if (re.test(name)) result.push(name);
@@ -132,7 +133,7 @@ class Injectt {
 
     if (!this.container.has(name)) {
       if (mustExist) throw new Error(`Injectt: No service was found: ${name}`);
-      return undefined;
+      return null;
     }
 
     let service = this.container.get(name);
