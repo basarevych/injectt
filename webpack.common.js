@@ -5,7 +5,7 @@ module.exports = {
   entry: root("src/injectt.js"),
   output: {
     path: root("dist"),
-    library: "inject",
+    library: "injectt",
     libraryTarget: "umd",
     umdNamedDefine: true,
     globalObject: "typeof self !== 'undefined' ? self : this"

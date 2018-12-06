@@ -4,7 +4,7 @@ const common = require("./webpack.common.js");
 module.exports = merge(common, {
   mode: "production",
   output: {
-    filename: "inject.min.js"
+    filename: "injectt.min.js"
   },
   module: {
     rules: [

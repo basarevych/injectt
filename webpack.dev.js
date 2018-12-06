@@ -6,7 +6,7 @@ module.exports = merge(common, {
   mode: "development",
   devtool: "inline-source-map",
   output: {
-    filename: "inject.js"
+    filename: "injectt.js"
   },
   plugins: [new CleanWebpackPlugin(["dist"])]
 });
