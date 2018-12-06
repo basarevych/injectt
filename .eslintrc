@@ -1,0 +1,19 @@
+{
+  "extends": ["eslint:recommended"],
+
+  "env": {
+    "es6": true,
+    "node": true,
+    "browser": true
+  },
+
+  "parser": "babel-eslint",
+
+  "rules": {
+    "no-console": "off",
+    "no-unused-vars": [
+      "error",
+      { "varsIgnorePattern": "[iI]gnored", "argsIgnorePattern": "^next$" }
+    ]
+  }
+}

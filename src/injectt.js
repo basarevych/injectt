@@ -1,15 +1,14 @@
+let debug;
+if (process.env.NODE_ENV !== "production") debug = require("debug")("injectt");
+
 /**
  * Dependency Injection Container
  */
 class Injectt {
   constructor() {
-    try {
-      const debug = require("debug");
-      this._debug = debug("injectt");
-      this._debug("Constructing the container");
-    } catch (unusedError) {
-      this._debug = null;
-    }
+    if (process.env.NODE_ENV !== "production")
+      debug("Constructing the container");
+
     this.container = new Map();
     this.registerInstance(this, "di");
   }
@@ -23,7 +22,9 @@ class Injectt {
   registerInstance(instance, name) {
     if (!name) throw new Error("Injectt: No name provided for an instance");
 
-    if (this._debug) this._debug(`Registering instance '${name}'`);
+    if (process.env.NODE_ENV !== "production")
+      debug(`Registering instance '${name}'`);
+
     let service = this._initService(name);
     service.instance = instance;
 
@@ -39,7 +40,9 @@ class Injectt {
     let name = classFunc.$provides;
     if (!name) throw new Error("Injectt: No name provided for a class");
 
-    if (this._debug) this._debug(`Registering class '${name}'`);
+    if (process.env.NODE_ENV !== "production")
+      debug(`Registering class '${name}'`);
+
     let service = this._initService(name);
     service.class = classFunc;
     service.$requires = classFunc.$requires || [];
@@ -67,7 +70,9 @@ class Injectt {
   get(name, ...extra) {
     if (!name) throw new Error("Injectt: No service name provided");
 
-    if (this._debug) this._debug(`Retrieving service '${name}'`);
+    if (process.env.NODE_ENV !== "production")
+      debug(`Retrieving service '${name}'`);
+
     if (typeof name === "string")
       return this._resolveService(name, extra, new Map());
 
@@ -85,7 +90,9 @@ class Injectt {
    * @return {string[]}                   Returns array of matching service names
    */
   search(re) {
-    if (this._debug) this._debug(`Searching for services ${re}`);
+    if (process.env.NODE_ENV !== "production")
+      debug(`Searching for services ${re}`);
+
     let result = [];
     for (let name of this.container.keys())
       if (re.test(name)) result.push(name);

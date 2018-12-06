@@ -1,6 +1,6 @@
 {
   "name": "injectt",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "license": "MIT",
   "author": "Ross Basarevych <basarevych@gmail.com>",
   "description": "Dependency Injection for Node and browser",
@@ -10,12 +10,29 @@
     "injection"
   ],
   "main": "src/injectt.node.js",
-  "browser": "src/injectt.js",
+  "browser": "dist/injectt.min.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/basarevych/injectt.git"
   },
   "scripts": {
-    "test": "node tests"
+    "test": "node tests",
+    "build": "webpack --config webpack.dev.js && webpack --config webpack.prod.js"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.0",
+    "@babel/core": "^7.2.0",
+    "@babel/preset-env": "^7.2.0",
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.4",
+    "babel-plugin-add-module-exports": "^1.0.0",
+    "clean-webpack-plugin": "^1.0.0",
+    "eslint": "^5.9.0",
+    "eslint-loader": "^2.1.1",
+    "null-loader": "^0.1.1",
+    "uglifyjs-webpack-plugin": "^2.0.1",
+    "webpack": "^4.27.1",
+    "webpack-cli": "^3.1.2",
+    "webpack-merge": "^4.1.4"
   }
 }
