@@ -19,12 +19,12 @@ class ClassA {
     this.param2 = param2;
   }
 
-  // service name
+  // service name, requried
   static get $provides() {
     return "a";
   }
 
-  // optional dependencies names which
+  // optional dependencies which
   // will be passed to the constructor
   static get $requires() {
     return ["b", "c"];
@@ -112,7 +112,7 @@ Omitting the property is the same as setting it to "perRequest".
 
 Each call to .get() is considered _a request_. Services with the lifecycle of _perRequest_ are only instantiated once per each request.
 
-In the example above both **a** and **b** receive an instance of ClassC. Because this happens during execution of the same .get() call both services receive _the same instance_ of ClassC.
+In the example above both **a** and **b**, which is a dependency of **a**, receive an instance of ClassC. Because this happens during execution of the same .get() call both services receive _the same instance_ of ClassC.
 
 ### unique
 
@@ -139,7 +139,7 @@ assert(a1.c !== a2.c);
 
 The third possible value for _\$lifecycle_ is "singleton". Singleton services are instantiated only once during the whole life of the DI container.
 
-In our example if ClassC was singleton then an instance of it whould have been constructed during the first .get() and then reused for any number of next .get()'s.
+In our example if ClassC was singleton then an instance of it whould have been constructed during the first .get() and then reused for any number of subsequent .get()'s.
 
 ```javascript
 // ClassC.$lifecycle === "singleton"
