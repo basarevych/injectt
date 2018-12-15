@@ -1,6 +1,6 @@
 # Injectt
 
-Dependency Injection for Node and the browser
+Straightforward Dependency Injection for Node and the browser
 
 ```sh
 npm install injectt
