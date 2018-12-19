@@ -157,13 +157,13 @@ assert(a1.c === a2.c);
 
 - **registerInstance(instance, name)**
 
-  Register variable **instance** value as service **name**
+  Register variable **instance** value as service **name**. When the service is requested exactly this value will be returned.
 
   Returns service name
 
 - **registerClass(classFunc)**
 
-  Register a class referred to by **classFunc** as a service. The class should have at least static property **\$provides** defined which is used as service name.
+  Register a class referred to by **classFunc** as a service. The class should have at least static property **\$provides** defined which is used as service name. When the service is requested it will be either instantiated or possibly reused if it were instantiated before.
 
   Static properties which have a special meaning:
 
@@ -175,7 +175,7 @@ assert(a1.c === a2.c);
 
     - **perRequest** - (default) service is instantiated once per each request
 
-    - **unique** - service instances are never reused
+    - **unique** - service instances are never reused, new instances are always instantiated
 
     - **singleton** - service is instantiated only once per the whole lifetime of the container
 
