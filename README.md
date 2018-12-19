@@ -74,7 +74,7 @@ module.exports = ClassC;
 const path = require("path");
 const Injectt = require("injectt");
 
-const di = new Inject();
+const di = new Injectt();
 
 // load all the services recursively
 // (only available in Node, not in browser)
@@ -191,10 +191,10 @@ export default ClassA;
 ```
 
 ```javascript
-import Injectt from "inject";
+import Injectt from "injectt";
 import ClassA from "./src/a";
 
-const di = new Inject();
+const di = new Injectt();
 di.registerClass(ClassA);
 // ...
 ```
