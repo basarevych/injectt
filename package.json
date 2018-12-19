@@ -16,6 +16,7 @@
     "url": "git+https://github.com/basarevych/injectt.git"
   },
   "scripts": {
+    "lint": "eslint . --max-warnings=0",
     "test": "node tests",
     "build": "webpack --config webpack.dev.js && webpack --config webpack.prod.js"
   },

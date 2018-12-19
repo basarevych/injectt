@@ -22,20 +22,20 @@ let cnt = 0;
 const loop = () => {
   var next = tests.shift();
 
-  if (!next) return console.log("\033[32m[ok]\033[39m  all ok");
+  if (!next) return console.log("\x1B[32m[ok]\x1B[39m  all ok");
 
   exec("node " + path.join(__dirname, next), { timeout: TIMEOUT }, error => {
     cnt++;
 
     if (error) {
-      console.error("\033[31m[err]\033[39m " + cnt + "/" + all + " - " + next);
+      console.error("\x1B[31m[err]\x1B[39m " + cnt + "/" + all + " - " + next);
       console.error(
         "\n      " + ("" + error.stack).split("\n").join("\n      ") + "\n"
       );
       return process.exit(1);
     }
 
-    console.log("\033[32m[ok]\033[39m  " + cnt + "/" + all + " - " + next);
+    console.log("\x1B[32m[ok]\x1B[39m  " + cnt + "/" + all + " - " + next);
     setTimeout(loop, 100);
   });
 };

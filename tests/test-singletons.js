@@ -2,7 +2,7 @@ const assert = require("assert");
 const Injectt = require("../src/injectt.js");
 
 /*
-  Register classes and instantiate
+  Get array of singletons
 */
 
 const A = require("./classA");
@@ -14,9 +14,16 @@ di.registerClass(A);
 di.registerClass(B);
 di.registerClass(C);
 
-let a = di.get("a");
-assert(a instanceof A);
-assert(a.b instanceof B);
-assert(a.b.c instanceof C);
-assert(a.c instanceof C);
+let result = di.singletons();
+assert(Array.isArray(result));
+assert(result.length === 0);
+
+B.$lifecycle = "singleton";
+di.registerClass(B);
+
+result = di.singletons();
+assert(Array.isArray(result));
+assert(result.length === 1);
+assert(result[0] instanceof B);
+
 process.exit(0);

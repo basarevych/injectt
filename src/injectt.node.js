@@ -14,7 +14,7 @@ class InjecttNode extends Injectt {
         let stats = fs.statSync(name);
         if (stats.isDirectory()) {
           loadDir(name);
-        } else if (_.endsWith(file, ".js")) {
+        } else if (file.endsWith(".js")) {
           let obj = require(name);
           if (
             typeof obj === "function" &&

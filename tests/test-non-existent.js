@@ -1,5 +1,4 @@
 const assert = require("assert");
-const net = require("net");
 const Injectt = require("../src/injectt.js");
 
 /*

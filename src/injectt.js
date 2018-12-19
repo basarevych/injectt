@@ -46,6 +46,7 @@ class Injectt {
     let service = this._initService(name);
     service.class = classFunc;
     service.$requires = classFunc.$requires || [];
+    service.$lifecycle = classFunc.$lifecycle || "perRequest";
 
     return service.$provides;
   }
@@ -97,6 +98,16 @@ class Injectt {
     for (let name of this.container.keys())
       if (re.test(name)) result.push(name);
     return result;
+  }
+
+  /**
+   * Get all defined singletons
+   * @return {object[]}                   Returns array of all the singletons
+   */
+  singletons() {
+    return Array.from(this.container.entries())
+      .filter(([, item]) => item.$lifecycle === "singleton")
+      .map(([name]) => this.get(name));
   }
 
   /**
