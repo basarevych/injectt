@@ -149,6 +149,56 @@ assert(a1 !== a2);
 assert(a1.c === a2.c);
 ```
 
+## API
+
+- **constructor()**
+
+  Constructs an instance of DI container
+
+- **registerInstance(instance, name)**
+
+  Register variable **instance** value as service **name**
+
+  Returns service name
+
+- **registerClass(classFunc)**
+
+  Register a class referred to by **classFunc** as a service. The class should have at least static property **\$provides** defined which is used as service name.
+
+  Static properties which have a special meaning:
+
+  - **\$provides** - (required) service name
+
+  - **\$requires** - an array of dependicies names which will be instantiated and passed to the constructor in the same order
+
+  - **\$lifecycle** - one of:
+
+    - **perRequest** - (default) service is instantiated once per each request
+
+    - **unique** - service instances are never reused
+
+    - **singleton** - service is instantiated only once per the whole lifetime of the container
+
+  Returns service name
+
+- **has(name)**
+
+  Checks if a service is registered. Returns boolean.
+
+- **get(name, ...extra)**
+
+  Instantiates if needed and returns a service registered as **name** passing all the rest of the parameters to service constructor
+
+- **search(re)**
+
+  Does search among the services by applying regular expression **re** to service names
+
+  Returns array of matched names
+
+- **singletons()**
+
+  Returns array of instances of all the singleton services
+
 ## Additional Notes
 
 Cyclic dependencies are not allowed (an error is thrown).
@@ -157,7 +207,9 @@ If requested dependecy is not found an error is thrown. You can mark a dependenc
 
 ```javascript
 class SomeClass {
-  constructor(a, b, c) {}
+  constructor(a, b, c) {
+    // b might be null
+  }
 
   static get $provides() {
     return "someClass";
