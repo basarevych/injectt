@@ -1,6 +1,6 @@
 {
   "name": "injectt",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "license": "MIT",
   "author": "Ross Basarevych <basarevych@gmail.com>",
   "description": "Straightforward Dependency Injection for Node and the browser",
