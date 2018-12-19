@@ -181,6 +181,12 @@ assert(a1.c === a2.c);
 
   Returns service name
 
+- **load(root)**
+
+  Recursively loads and registers all the services in the given directory **root**. To be considered a service the file should end with .js extension and export a class with **\$provides** static property defined
+
+  NOTE: This method is not available in the browser version of the library
+
 - **has(name)**
 
   Checks if a service is registered. Returns boolean.
