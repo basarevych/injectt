@@ -153,7 +153,7 @@ assert(a1.c === a2.c);
 
 - **constructor()**
 
-  Constructs an instance of DI container
+  Constructs an instance of DI container. The container self-registers its own instance as service "di".
 
 - **registerInstance(instance, name)**
 
