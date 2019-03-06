@@ -8,5 +8,5 @@ module.exports = merge(common, {
   output: {
     filename: "injectt.js"
   },
-  plugins: [new CleanWebpackPlugin(["dist"])]
+  plugins: [new CleanWebpackPlugin({ cleanOnceBeforeBuildPatterns: ["dist"] })]
 });

@@ -63,6 +63,31 @@ class Injectt {
   }
 
   /**
+   * Get class of a service
+   * @param {string|RegExp} name          Service name or RegExp of names
+   * @return {function|Map}               Returns constructor function of a service or Map of
+   *                                      functions in case of RegExp
+   */
+  getClass(name) {
+    if (!name) throw new Error("Injectt: No service name provided");
+
+    if (process.env.NODE_ENV !== "production")
+      debug(`Retrieving class '${name}'`);
+
+    if (typeof name === "string") {
+      let service = this.container.get(name);
+      return service && service.class;
+    }
+
+    let result = new Map();
+    this.search(name).forEach(item => {
+      let service = this.container.get(item);
+      result.set(item, service && service.class);
+    });
+    return result;
+  }
+
+  /**
    * Get instance of a service
    * @param {string|RegExp} name          Service name or RegExp of names
    * @param {...*} extra                  Optional extra arguments to the constructor

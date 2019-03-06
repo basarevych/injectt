@@ -24,8 +24,8 @@ class ClassA {
     return "a";
   }
 
-  // optional dependencies which
-  // will be passed to the constructor
+  // dependencies which will be passed
+  // to the constructor, optional
   static get $requires() {
     return ["b", "c"];
   }
@@ -153,7 +153,9 @@ assert(a1.c === a2.c);
 
 - **constructor()**
 
-  Constructs an instance of DI container. The container self-registers its own instance as service "di".
+  Constructs an instance of DI container.
+
+  **NOTE** The container self-registers its own instance as service named "di".
 
 - **registerInstance(instance, name)**
 
@@ -194,6 +196,14 @@ assert(a1.c === a2.c);
 - **get(name, ...extra)**
 
   Instantiates if needed and returns a service registered as **name** passing all the rest of the parameters to service constructor
+
+  **name** could also be a RegExp, in which case **get()** will return a Map(name --> service) of matching services.
+
+- **getClass(name)**
+
+  Retrieves the class (constructor function really) of a service without instantiating it.
+
+  **name** could also be a RegExp, in which case **getClass()** will return a Map(name --> function) of matching services.
 
 - **search(re)**
 
