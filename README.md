@@ -183,9 +183,33 @@ assert(a1.c === a2.c);
 
   Returns service name
 
-- **load(root)**
+- **load(root [, options])**
 
-  Recursively loads and registers all the services in the given directory **root**. To be considered a service the file should end with .js extension and export a class with **\$provides** static property defined
+  Options:
+
+  ```javascript
+  {
+    dirInclude: null | [String] | [RegExp],
+    dirExclude: null | [String] | [RegExp],
+    fileInclude: null | [String] | [RegExp],
+    fileExclude: null | [String] | [RegExp],
+  }
+  ```
+
+  Passing **null** in **\*include/\*exclude** options means "skip this check".
+
+  Default options:
+
+  ```javascript
+  {
+    dirInclude: null,
+    dirExclude: [/^__/], // directory names must not start with two underscores
+    fileInclude: [/\.js$/], // file names must end with .js extension
+    fileExclude: [/\.test\.js$/], // but skip test files
+  }
+  ```
+
+  Recursively loads and registers all the services in the given directory **root**. To be considered a service the file should match **fileInclude** option, do not match **fileExclude** option, and export a class with **\$provides** static property defined. Subdirectories are checked againt **dirInclude/dirExclude** options.
 
   NOTE: This method is not available in the browser version of the library
 
