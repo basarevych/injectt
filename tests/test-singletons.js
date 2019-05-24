@@ -2,7 +2,7 @@ const assert = require("assert");
 const Injectt = require("../src/injectt.js");
 
 /*
-  Get array of singletons
+  Get singletons
 */
 
 const A = require("./classA");
@@ -15,15 +15,22 @@ di.registerClass(B);
 di.registerClass(C);
 
 let result = di.singletons();
-assert(Array.isArray(result));
-assert(result.length === 0);
+assert(result instanceof Map);
+assert(Array.from(result.keys()).length === 0);
 
 B.$lifecycle = "singleton";
 di.registerClass(B);
 
 result = di.singletons();
-assert(Array.isArray(result));
-assert(result.length === 1);
-assert(result[0] instanceof B);
+assert(result instanceof Map);
+assert(Array.from(result.keys()).length === 1);
+assert(result.get("b") instanceof B);
+
+let old = result.get("b");
+result = di.singletons(); // repeat
+assert(result instanceof Map);
+assert(Array.from(result.keys()).length === 1);
+assert(result.get("b") instanceof B);
+assert(old === result.get("b")); // singleton
 
 process.exit(0);

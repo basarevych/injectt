@@ -155,7 +155,7 @@ assert(a1.c === a2.c);
 
   Constructs an instance of DI container.
 
-  **NOTE** The container self-registers its own instance as service named "di".
+  **NOTE** The container self-registers its own instance as a service named "di".
 
 - **registerInstance(instance, name)**
 
@@ -217,56 +217,57 @@ assert(a1.c === a2.c);
 
   Checks if a service is registered. Returns boolean.
 
-- **get(name, ...extra)**
+- **search(re)**
 
-  Instantiates if needed and returns a service registered as **name** passing all the rest of the parameters to service constructor
+  Does search among the services by applying regular expression **re** to each service name
 
-  **name** could also be a RegExp, in which case **get()** will return a Map(name --> service) of matching services.
+  Returns an array of matched names
 
 - **getClass(name)**
 
   Retrieves the class (constructor function really) of a service without instantiating it.
 
-  **name** could also be a RegExp, in which case **getClass()** will return a Map(name --> function) of matching services.
+  **name** could also be a RegExp or an Array of strings, in which case **getClass()** will return a Map(name --> constructor function) of matching services.
 
-- **search(re)**
+- **get(name, ...extra)**
 
-  Does search among the services by applying regular expression **re** to service names
+  Instantiates if needs to and returns a service registered as **name** passing all the rest of the parameters to service constructor
 
-  Returns array of matched names
+  **name** could also be a RegExp or an Array of strings, in which case **get()** will return a Map(name --> instance) of matching services.
 
-- **singletons()**
+- **singletons(...extra)**
 
-  Returns array of instances of all the singleton services
+  Returns Map(name -> instance) of all the singleton services
 
 ## Additional Notes
 
-Cyclic dependencies are not allowed (an error is thrown).
+- Cyclic dependencies are not allowed (an error is thrown).
 
-If requested dependecy is not found an error is thrown. You can mark a dependency as optional by adding "?" at the end of the name:
+- If requested dependecy is not found an error is thrown. You can
+  mark a dependency as optional by adding "?" at the end of the name:
 
-```javascript
-class SomeClass {
-  constructor(a, b, c) {
-    // b might be null
+  ```javascript
+  class SomeClass {
+    constructor(a, b, c) {
+      // b might be null
+    }
+
+    static get $provides() {
+      return "someClass";
+    }
+
+    // b is optional, becomes null if not found
+    static get $requires() {
+      return ["a", "b?", "c"];
+    }
   }
-
-  static get $provides() {
-    return "someClass";
-  }
-
-  // b is optional, becomes null if not found
-  static get $requires() {
-    return ["a", "b?", "c"];
-  }
-}
-```
+  ```
 
 ### Modern style
 
-Usually in the browser we use ES6 imports and we often have "static class properties" proposal enabled via Babel.
+Usually we use ES6 imports in the browser and we often have "static class properties" proposal enabled via Babel.
 
-So ClassA could be written like this:
+In which case ClassA could be rewritten like this:
 
 ```javascript
 class ClassA {

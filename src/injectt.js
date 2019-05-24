@@ -63,10 +63,26 @@ class Injectt {
   }
 
   /**
+   * Search registered services
+   * @param {RegExp} search               RegExp for service names
+   * @return {string[]}                   Returns array of matching service names
+   */
+  search(search) {
+    if (!(search instanceof RegExp))
+      throw new Error("Injectt: Invalid search argument provided");
+    if (process.env.NODE_ENV !== "production")
+      debug(`Searching for services ${search}`);
+
+    let result = [];
+    for (let name of this.container.keys())
+      if (search.test(name)) result.push(name);
+    return result;
+  }
+
+  /**
    * Get class of a service
-   * @param {string|RegExp} name          Service name or RegExp of names
-   * @return {function|Map}               Returns constructor function of a service or Map of
-   *                                      functions in case of RegExp
+   * @param {string|Array|RegExp} name    Service name(s) or RegExp
+   * @return {class|Map}                  Returns class for a string name or Map of classes otherwise
    */
   getClass(name) {
     if (!name) throw new Error("Injectt: No service name provided");
@@ -74,24 +90,27 @@ class Injectt {
     if (process.env.NODE_ENV !== "production")
       debug(`Retrieving class '${name}'`);
 
-    if (typeof name === "string") {
+    let arr;
+    if (Array.isArray(name)) {
+      arr = name;
+    } else if (name instanceof RegExp) {
+      arr = this.search(name);
+    } else {
       let service = this.container.get(name);
       return service && service.class;
     }
 
-    let result = new Map();
-    this.search(name).forEach(item => {
-      let service = this.container.get(item);
-      result.set(item, service && service.class);
-    });
-    return result;
+    return arr.reduce((acc, cur) => {
+      let service = this.container.get(cur);
+      return acc.set(cur, service.class ? service.class : null);
+    }, new Map());
   }
 
   /**
    * Get instance of a service
-   * @param {string|RegExp} name          Service name or RegExp of names
+   * @param {string|Array|RegExp} name    Service name(s) or RegExp
    * @param {...*} extra                  Optional extra arguments to the constructor
-   * @return {object|Map}                 Returns instance or Map of instances in case of RegExp
+   * @return {object|Map}                 Returns instance for a string name or Map of instances otherwise
    */
   get(name, ...extra) {
     if (!name) throw new Error("Injectt: No service name provided");
@@ -99,40 +118,30 @@ class Injectt {
     if (process.env.NODE_ENV !== "production")
       debug(`Retrieving service '${name}'`);
 
-    if (typeof name === "string")
-      return this._resolveService(name, extra, new Map());
+    let arr;
+    if (Array.isArray(name)) arr = name;
+    else if (name instanceof RegExp) arr = this.search(name);
+    else return this._resolveService(name, extra, new Map());
 
-    let result = new Map();
     let request = new Map();
-    this.search(name).forEach(item =>
-      result.set(item, this._resolveService(item, extra, request))
-    );
-    return result;
-  }
-
-  /**
-   * Search registered services
-   * @param {RegExp} re                   Service name RegExp
-   * @return {string[]}                   Returns array of matching service names
-   */
-  search(re) {
-    if (process.env.NODE_ENV !== "production")
-      debug(`Searching for services ${re}`);
-
-    let result = [];
-    for (let name of this.container.keys())
-      if (re.test(name)) result.push(name);
-    return result;
+    return arr.reduce((acc, cur) => {
+      return acc.set(cur, this._resolveService(cur, extra, request));
+    }, new Map());
   }
 
   /**
    * Get all defined singletons
-   * @return {object[]}                   Returns array of all the singletons
+   * @param {...*} extra                  Optional extra arguments to the constructor
+   * @return {Map}                        Returns map of all the singletons
    */
-  singletons() {
-    return Array.from(this.container.entries())
-      .filter(([, item]) => item.$lifecycle === "singleton")
-      .map(([name]) => this.get(name));
+  singletons(...extra) {
+    let request = new Map();
+    return Array.from(this.container.keys()).reduce((acc, cur) => {
+      let service = this.container.get(cur);
+      if (service && service.$lifecycle === "singleton")
+        acc.set(cur, this._resolveService(cur, extra, request));
+      return acc;
+    }, new Map());
   }
 
   /**
